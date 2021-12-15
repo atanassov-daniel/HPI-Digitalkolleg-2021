@@ -43,56 +43,16 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 from analyse import analyse
-from gen_graphs import gen_graphs
-
+import json
 
 def main(chat_path: str):
     results = analyse(chat_path)
     if results.get("no_messages") == True:
         print("There are no messages in the analysed chat")
     else:
-        words_used_desc = results.get("words_used_desc")
-
-        lines = []
-        words_length = len(words_used_desc)
-        end = 0
-        if words_length < 100:
-            end = words_length
-        else:
-            end = 100
-        for index in range(end):
-            lines.append(f"{index + 1}. {words_used_desc[index][0]}")
-
-        from datetime import datetime
-
-        time = datetime.now()
-        date = time.astimezone().strftime("%d-%m-%Y_%H-%M-%S")
-
-        # generate info file for the current analysis
-        import pathlib
-
-        chat_name = chat_path.split("\\")[-1]
-        path = f"output/{date} {chat_name}"
-        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
-
-        info_sentence = f"This analysis was generated for the file with the path {chat_path} on {date}"
-
-        with open(f"{path}/100_most_common_words.txt", "w", encoding="utf-8") as f:
-            f.write(info_sentence + "\n\n")
-            f.write("\n".join(lines))
-        with open(f"{path}/special_words.txt", "w", encoding="utf-8") as f:
-            f.write(info_sentence + "\n\n")
-            for i in range(199, 500, 100):
-                if i < words_length:
-                    f.write(f"{words_used_desc[i][0]} ")
-
-        gen_graphs(
-            results.get("people_messages_count_desc"),
-            results.get("total_messages"),
-            path
-        )
-        """ print(results.get("people_messages_count_desc"))
-        print(results.get("words_used_desc")[:20]) """
+        print(f"The total amount of messages is: {results.get('total_messages')}")
+        print(results.get("people_messages_count_desc"))
+        print(results.get("words_used_desc")[:20])
 
 
 from timeit import default_timer as timer

@@ -78,6 +78,7 @@ def analyse(chat_path: str):
                 "words_used_desc": sorted(
                     words_used.items(), key=lambda item: item[1], reverse=True
                 ),
+                
             }
 
 
